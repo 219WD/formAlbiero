@@ -138,3 +138,63 @@
     font-size: 16px;
   }
 }
+
+/* SweetAlert2 Custom Styles */
+.swal-title {
+  font-family: "Bai Jamjuree", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 24px !important;
+  color: #3D3D3D !important;
+}
+
+.swal-text {
+  font-family: "Bai Jamjuree", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+  color: #3D3D3D !important;
+  line-height: 1.5 !important;
+}
+
+.swal-button {
+  font-family: "Bai Jamjuree", sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+}
+
+.swal-button:not([disabled]):hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Loading spinner color */
+.swal2-loader {
+  border-color: #7D1522 transparent #7D1522 transparent !important;
+}
+
+/* Icon colors */
+.swal2-success [class^='swal2-success-line'] {
+  background-color: #7D1522 !important;
+}
+
+.swal2-success .swal2-success-ring {
+  border-color: rgba(125, 21, 34, 0.3) !important;
+}
+
+/* Responsive SweetAlert */
+@media (max-width: 480px) {
+  .swal-title {
+    font-size: 20px !important;
+  }
+  
+  .swal-text {
+    font-size: 14px !important;
+  }
+  
+  .swal-button {
+    font-size: 14px !important;
+    padding: 10px 20px !important;
+  }
+}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 import './RegistroForm.css';
 
 export default function RegistroForm() {
@@ -18,16 +19,107 @@ export default function RegistroForm() {
     }));
   };
 
+  // Función para mostrar alerta de éxito
+  const showSuccessAlert = () => {
+    return Swal.fire({
+      title: '¡Registro Exitoso!',
+      html: 'Hemos recibido tu información. <br />Te contactaremos pronto.',
+      icon: 'success',
+      iconColor: '#7D1522',
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#7D1522',
+      background: '#FAFFFF',
+      color: '#3D3D3D',
+      customClass: {
+        title: 'swal-title',
+        htmlContainer: 'swal-text',
+        confirmButton: 'swal-button'
+      }
+    });
+  };
+
+  // Función para mostrar alerta de error
+  const showErrorAlert = (message) => {
+    return Swal.fire({
+      title: '¡Error!',
+      html: message,
+      icon: 'error',
+      iconColor: '#dc2626',
+      confirmButtonText: 'Intentar nuevamente',
+      confirmButtonColor: '#dc2626',
+      background: '#FAFFFF',
+      color: '#3D3D3D',
+      customClass: {
+        title: 'swal-title',
+        htmlContainer: 'swal-text',
+        confirmButton: 'swal-button'
+      }
+    });
+  };
+
+  // Función para mostrar alerta de validación
+  const showValidationAlert = (message) => {
+    return Swal.fire({
+      title: 'Campos incompletos',
+      html: message,
+      icon: 'warning',
+      iconColor: '#f59e0b',
+      confirmButtonText: 'Entendido',
+      confirmButtonColor: '#f59e0b',
+      background: '#FAFFFF',
+      color: '#3D3D3D',
+      customClass: {
+        title: 'swal-title',
+        htmlContainer: 'swal-text',
+        confirmButton: 'swal-button'
+      }
+    });
+  };
+
+  // Función para mostrar alerta de carga
+  const showLoadingAlert = () => {
+    Swal.fire({
+      title: 'Enviando registro...',
+      html: 'Por favor espera un momento.',
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+      showConfirmButton: false,
+      background: '#FAFFFF',
+      color: '#3D3D3D',
+      customClass: {
+        title: 'swal-title',
+        htmlContainer: 'swal-text'
+      }
+    });
+  };
+
+  // Función para cerrar alerta de carga
+  const closeLoadingAlert = () => {
+    Swal.close();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Validación básica
     if (!formData.nombre || !formData.email || !formData.servicio || !formData.telefono) {
-      alert("Por favor completa todos los campos");
+      showValidationAlert("Por favor completa todos los campos del formulario.");
+      return;
+    }
+
+    // Validación de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      showValidationAlert("Por favor ingresa un email válido.");
       return;
     }
 
     setLoading(true);
+    showLoadingAlert();
     
     try {
       console.log('📤 Enviando datos:', formData);
@@ -37,15 +129,20 @@ export default function RegistroForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          timestamp: new Date().toISOString(),
+          source: 'albiero-web-form'
+        })
       });
 
       console.log('📥 Respuesta recibida:', {
         status: response.status,
         statusText: response.statusText,
         ok: response.ok,
-        headers: Object.fromEntries(response.headers.entries())
       });
+
+      closeLoadingAlert();
 
       // Verificar si la respuesta es JSON
       const contentType = response.headers.get('content-type');
@@ -54,12 +151,12 @@ export default function RegistroForm() {
         if (contentType && contentType.includes('application/json')) {
           const result = await response.json();
           console.log('✅ Resultado JSON:', result);
-          alert("Registro exitoso");
         } else {
           const text = await response.text();
           console.log('✅ Respuesta texto:', text);
-          alert("Registro exitoso");
         }
+        
+        await showSuccessAlert();
         
         // Limpiar formulario después del éxito
         setFormData({
@@ -70,19 +167,29 @@ export default function RegistroForm() {
         });
       } else {
         // Manejar errores del servidor
+        let errorMessage = "Error en el servidor. Por favor intenta nuevamente.";
+        
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
           console.error('❌ Error JSON:', errorData);
-          alert(`Error en el registro: ${errorData.message || response.statusText}`);
+          errorMessage = errorData.message || response.statusText;
         } else {
           const errorText = await response.text();
           console.error('❌ Error texto:', errorText);
-          alert(`Error en el registro: ${response.status} ${response.statusText}`);
+          errorMessage = `${response.status} ${response.statusText}`;
         }
+        
+        await showErrorAlert(errorMessage);
       }
     } catch (error) {
       console.error("❌ Error de red:", error);
-      alert("Error de conexión. Verifica tu internet e intenta nuevamente.");
+      closeLoadingAlert();
+      
+      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+        await showErrorAlert("Error de conexión. Verifica tu internet e intenta nuevamente.");
+      } else {
+        await showErrorAlert("Error inesperado. Por favor intenta nuevamente.");
+      }
     } finally {
       setLoading(false);
     }
@@ -113,6 +220,7 @@ export default function RegistroForm() {
             className="input" 
             placeholder="Tu nombre completo"
             required
+            disabled={loading}
           />
         </div>
 
@@ -127,6 +235,7 @@ export default function RegistroForm() {
             className="input" 
             placeholder="tu@email.com"
             required
+            disabled={loading}
           />
         </div>
 
@@ -141,6 +250,7 @@ export default function RegistroForm() {
             className="input" 
             placeholder="Servicio requerido"
             required
+            disabled={loading}
           />
         </div>
 
@@ -155,6 +265,7 @@ export default function RegistroForm() {
             className="input" 
             placeholder="Tu número de teléfono"
             required
+            disabled={loading}
           />
         </div>
 
@@ -163,7 +274,7 @@ export default function RegistroForm() {
           className={`button ${loading ? 'button-disabled' : ''}`} 
           disabled={loading}
         >
-          {loading ? "Enviando..." : "Enviar Registro"}
+          {loading ? "⏳ Enviando..." : "📨 Enviar Registro"}
         </button>
       </form>
     </div>
