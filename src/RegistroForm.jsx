@@ -14,11 +14,19 @@ export default function RegistroForm() {
   });
   const [loading, setLoading] = useState(false);
 
-  // URLs para producción y testeo
-  const isProduction = false; // Cambia a true para producción
-  const WEBHOOK_URL = isProduction 
-    ? 'https://n8n.srv1092751.hstgr.cloud/webhook/2dbe68d9-8953-4cc9-a88f-1ba1bedf8e1d'
-    : 'https://n8n.srv1092751.hstgr.cloud/webhook-test/2dbe68d9-8953-4cc9-a88f-1ba1bedf8e1d';
+  // URL de producción
+  const WEBHOOK_URL = 'https://n8n.srv1092751.hstgr.cloud/webhook/2dbe68d9-8953-4cc9-a88f-1ba1bedf8e1d';
+
+  // CONFIGURACIÓN - Cambia este número por tu WhatsApp
+  const whatsappNumber = '5493813522339'; // Reemplaza con tu número
+  const whatsappMessage = 'Hola, me interesa conocer más sobre sus servicios. ¿Podrían proporcionarme información?';
+
+  // Función para abrir WhatsApp
+  const openWhatsApp = () => {
+    const message = encodeURIComponent(whatsappMessage);
+    const url = `https://wa.me/${whatsappNumber}?text=${message}`;
+    window.open(url, '_blank');
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -133,7 +141,6 @@ export default function RegistroForm() {
     try {
       console.log('📤 Enviando datos:', formData);
       console.log('🔗 URL utilizada:', WEBHOOK_URL);
-      console.log('🏭 Modo:', isProduction ? 'PRODUCCIÓN' : 'TESTEO');
 
       const response = await fetch(WEBHOOK_URL, {
         method: 'POST',
@@ -144,7 +151,7 @@ export default function RegistroForm() {
           ...formData,
           timestamp: new Date().toISOString(),
           source: 'albiero-web-form',
-          environment: isProduction ? 'production' : 'test'
+          environment: 'production'
         })
       });
 
@@ -219,12 +226,6 @@ export default function RegistroForm() {
       </div>
 
       <h1 className="title">Formulario de Registro</h1>
-      
-      {/* Indicador de ambiente */}
-      <div className={`environment-badge ${isProduction ? 'production' : 'test'}`}>
-        <i className={`fas ${isProduction ? 'fa-rocket' : 'fa-vial'}`}></i>
-        {isProduction ? ' MODO PRODUCCIÓN' : ' MODO TESTEO'}
-      </div>
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -308,6 +309,21 @@ export default function RegistroForm() {
           {loading ? " Enviando..." : " Enviar Registro"}
         </button>
       </form>
+
+      {/* Botón de WhatsApp */}
+      <div className="whatsapp-section">
+        <div className="whatsapp-divider">
+          <span>O contáctanos directamente</span>
+        </div>
+        <button 
+          type="button" 
+          className="whatsapp-button"
+          onClick={openWhatsApp}
+        >
+          <i className="fab fa-whatsapp"></i>
+          Contactar por WhatsApp
+        </button>
+      </div>
     </div>
   );
 }

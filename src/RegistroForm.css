@@ -245,3 +245,100 @@
     padding: 10px 20px !important;
   }
 }
+
+/* Sección de WhatsApp */
+.whatsapp-section {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.whatsapp-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: #3D3D3D;
+  font-family: "Bai Jamjuree", sans-serif;
+  font-size: 14px;
+}
+
+.whatsapp-divider::before,
+.whatsapp-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #B8B8B8;
+}
+
+.whatsapp-divider span {
+  padding: 0 15px;
+  color: #7D1522;
+  font-weight: 500;
+}
+
+.whatsapp-button {
+  width: 100%;
+  background-color: #25D366;
+  padding: 18px;
+  border-radius: 10px;
+  border: none;
+  color: #FAFFFF;
+  font-size: 18px;
+  font-family: "Bai Jamjuree", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-button:hover {
+  background-color: #128C7E;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(37, 211, 102, 0.4);
+}
+
+.whatsapp-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(37, 211, 102, 0.3);
+}
+
+/* Badge de ambiente */
+.environment-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border: 2px solid;
+}
+
+.environment-badge.production {
+  background-color: #dcfce7;
+  color: #166534;
+  border-color: #166534;
+}
+
+.environment-badge.test {
+  background-color: #fef3c7;
+  color: #92400e;
+  border-color: #92400e;
+}
+
+.environment-badge i {
+  margin-right: 6px;
+}
+
+/* Responsive para WhatsApp */
+@media (max-width: 480px) {
+  .whatsapp-button {
+    padding: 16px;
+    font-size: 16px;
+  }
+  
+  .whatsapp-divider {
+    font-size: 13px;
+  }
+}
