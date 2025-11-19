@@ -30,7 +30,8 @@ export default function RegistroForm() {
     setLoading(true);
     
     try {
-      // Aquí pondrás tu URL del API
+      console.log('📤 Enviando datos:', formData);
+
       const response = await fetch('https://n8n.srv1092751.hstgr.cloud/webhook/2dbe68d9-8953-4cc9-a88f-1ba1bedf8e1d', {
         method: 'POST',
         headers: {
@@ -39,9 +40,27 @@ export default function RegistroForm() {
         body: JSON.stringify(formData)
       });
 
+      console.log('📥 Respuesta recibida:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries())
+      });
+
+      // Verificar si la respuesta es JSON
+      const contentType = response.headers.get('content-type');
+      
       if (response.ok) {
-        const result = await response.json();
-        alert("Registro exitoso");
+        if (contentType && contentType.includes('application/json')) {
+          const result = await response.json();
+          console.log('✅ Resultado JSON:', result);
+          alert("Registro exitoso");
+        } else {
+          const text = await response.text();
+          console.log('✅ Respuesta texto:', text);
+          alert("Registro exitoso");
+        }
+        
         // Limpiar formulario después del éxito
         setFormData({
           nombre: '',
@@ -50,11 +69,20 @@ export default function RegistroForm() {
           telefono: '',
         });
       } else {
-        alert("Error en el registro");
+        // Manejar errores del servidor
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          console.error('❌ Error JSON:', errorData);
+          alert(`Error en el registro: ${errorData.message || response.statusText}`);
+        } else {
+          const errorText = await response.text();
+          console.error('❌ Error texto:', errorText);
+          alert(`Error en el registro: ${response.status} ${response.statusText}`);
+        }
       }
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error al enviar el formulario");
+      console.error("❌ Error de red:", error);
+      alert("Error de conexión. Verifica tu internet e intenta nuevamente.");
     } finally {
       setLoading(false);
     }
@@ -75,7 +103,7 @@ export default function RegistroForm() {
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="nombre" className="label">Nombre</label>
+          <label htmlFor="nombre" className="label">Nombre *</label>
           <input 
             id="nombre"
             type="text" 
@@ -84,11 +112,12 @@ export default function RegistroForm() {
             onChange={handleChange} 
             className="input" 
             placeholder="Tu nombre completo"
+            required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="email" className="label">Email</label>
+          <label htmlFor="email" className="label">Email *</label>
           <input 
             id="email"
             type="email" 
@@ -97,11 +126,12 @@ export default function RegistroForm() {
             onChange={handleChange} 
             className="input" 
             placeholder="tu@email.com"
+            required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="servicio" className="label">Servicio</label>
+          <label htmlFor="servicio" className="label">Servicio *</label>
           <input 
             id="servicio"
             type="text" 
@@ -110,11 +140,12 @@ export default function RegistroForm() {
             onChange={handleChange} 
             className="input" 
             placeholder="Servicio requerido"
+            required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="telefono" className="label">Teléfono</label>
+          <label htmlFor="telefono" className="label">Teléfono *</label>
           <input 
             id="telefono"
             type="tel" 
@@ -123,6 +154,7 @@ export default function RegistroForm() {
             onChange={handleChange} 
             className="input" 
             placeholder="Tu número de teléfono"
+            required
           />
         </div>
 
