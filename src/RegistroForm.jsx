@@ -14,6 +14,12 @@ export default function RegistroForm() {
   });
   const [loading, setLoading] = useState(false);
 
+  // URLs para producción y testeo
+  const isProduction = false; // Cambia a true para producción
+  const WEBHOOK_URL = isProduction 
+    ? 'https://n8n.srv1092751.hstgr.cloud/webhook/2dbe68d9-8953-4cc9-a88f-1ba1bedf8e1d'
+    : 'https://n8n.srv1092751.hstgr.cloud/webhook-test/2dbe68d9-8953-4cc9-a88f-1ba1bedf8e1d';
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -126,8 +132,10 @@ export default function RegistroForm() {
     
     try {
       console.log('📤 Enviando datos:', formData);
+      console.log('🔗 URL utilizada:', WEBHOOK_URL);
+      console.log('🏭 Modo:', isProduction ? 'PRODUCCIÓN' : 'TESTEO');
 
-      const response = await fetch('https://n8n.srv1092751.hstgr.cloud/webhook/2dbe68d9-8953-4cc9-a88f-1ba1bedf8e1d', {
+      const response = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +143,8 @@ export default function RegistroForm() {
         body: JSON.stringify({
           ...formData,
           timestamp: new Date().toISOString(),
-          source: 'albiero-web-form'
+          source: 'albiero-web-form',
+          environment: isProduction ? 'production' : 'test'
         })
       });
 
@@ -210,6 +219,12 @@ export default function RegistroForm() {
       </div>
 
       <h1 className="title">Formulario de Registro</h1>
+      
+      {/* Indicador de ambiente */}
+      <div className={`environment-badge ${isProduction ? 'production' : 'test'}`}>
+        <i className={`fas ${isProduction ? 'fa-rocket' : 'fa-vial'}`}></i>
+        {isProduction ? ' MODO PRODUCCIÓN' : ' MODO TESTEO'}
+      </div>
       
       <form onSubmit={handleSubmit}>
         <div className="form-group">
