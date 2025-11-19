@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import './RegistroForm.css';
 
+// Importar CSS de Font Awesome
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 export default function RegistroForm() {
   const [formData, setFormData] = useState({
     nombre: '',
@@ -211,62 +214,74 @@ export default function RegistroForm() {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="nombre" className="label">Nombre *</label>
-          <input 
-            id="nombre"
-            type="text" 
-            name="nombre" 
-            value={formData.nombre} 
-            onChange={handleChange} 
-            className="input" 
-            placeholder="Tu nombre completo"
-            required
-            disabled={loading}
-          />
+          <div className="input-container">
+            <i className="fas fa-user input-icon"></i>
+            <input 
+              id="nombre"
+              type="text" 
+              name="nombre" 
+              value={formData.nombre} 
+              onChange={handleChange} 
+              className="input" 
+              placeholder="Tu nombre completo"
+              required
+              disabled={loading}
+            />
+          </div>
         </div>
 
         <div className="form-group">
           <label htmlFor="email" className="label">Email *</label>
-          <input 
-            id="email"
-            type="email" 
-            name="email" 
-            value={formData.email} 
-            onChange={handleChange} 
-            className="input" 
-            placeholder="tu@email.com"
-            required
-            disabled={loading}
-          />
+          <div className="input-container">
+            <i className="fas fa-envelope input-icon"></i>
+            <input 
+              id="email"
+              type="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              className="input" 
+              placeholder="tu@email.com"
+              required
+              disabled={loading}
+            />
+          </div>
         </div>
 
         <div className="form-group">
           <label htmlFor="servicio" className="label">Servicio *</label>
-          <input 
-            id="servicio"
-            type="text" 
-            name="servicio" 
-            value={formData.servicio} 
-            onChange={handleChange} 
-            className="input" 
-            placeholder="Servicio requerido"
-            required
-            disabled={loading}
-          />
+          <div className="input-container">
+            <i className="fas fa-concierge-bell input-icon"></i>
+            <input 
+              id="servicio"
+              type="text" 
+              name="servicio" 
+              value={formData.servicio} 
+              onChange={handleChange} 
+              className="input" 
+              placeholder="Servicio requerido"
+              required
+              disabled={loading}
+            />
+          </div>
         </div>
 
         <div className="form-group">
           <label htmlFor="telefono" className="label">Teléfono *</label>
-          <input 
-            id="telefono"
-            type="tel" 
-            name="telefono" 
-            value={formData.telefono} 
-            onChange={handleChange} 
-            className="input" 
-            placeholder="Tu número de teléfono"
-            required
-            disabled={loading}
-          />
+          <div className="input-container">
+            <i className="fas fa-phone input-icon"></i>
+            <input 
+              id="telefono"
+              type="tel" 
+              name="telefono" 
+              value={formData.telefono} 
+              onChange={handleChange} 
+              className="input" 
+              placeholder="Tu número de teléfono"
+              required
+              disabled={loading}
+            />
+          </div>
         </div>
 
         <button 
@@ -274,7 +289,8 @@ export default function RegistroForm() {
           className={`button ${loading ? 'button-disabled' : ''}`} 
           disabled={loading}
         >
-          {loading ? "⏳ Enviando..." : "📨 Enviar Registro"}
+          <i className={`fas ${loading ? 'fa-spinner fa-spin' : 'fa-paper-plane'}`}></i>
+          {loading ? " Enviando..." : " Enviar Registro"}
         </button>
       </form>
     </div>

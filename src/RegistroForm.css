@@ -38,18 +38,40 @@
 }
 
 .label {
-  display: block;
+  display: flex;
+  align-items: center;
   color: #3D3D3D;
   margin-bottom: 10px;
   font-family: "Bai Jamjuree", sans-serif;
   font-size: 16px;
   font-weight: 400;
+  gap: 8px;
+}
+
+.icon-label {
+  color: #7D1522;
+  width: 16px;
+  text-align: center;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 16px;
+  color: #7D1522;
+  z-index: 2;
+  font-size: 16px;
 }
 
 .input {
   width: 100%;
   border: 1px solid #3D3D3D;
-  padding: 16px;
+  padding: 16px 16px 16px 45px;
   border-radius: 10px;
   background-color: #FAFFFF;
   color: #3D3D3D;
@@ -58,12 +80,23 @@
   font-weight: 400;
   box-sizing: border-box;
   min-height: 50px;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .input:focus {
   outline: none;
   border-color: #7D1522;
+  box-shadow: 0 0 0 2px rgba(125, 21, 34, 0.1);
+}
+
+.input:focus + .input-icon {
+  color: #7D1522;
+}
+
+.input:disabled {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .button {
@@ -82,7 +115,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  gap: 10px;
+  transition: all 0.3s ease;
 }
 
 .button:hover {
@@ -129,13 +163,26 @@
   }
   
   .input {
-    padding: 14px;
+    padding: 14px 14px 14px 40px;
     font-size: 15px;
+  }
+  
+  .input-icon {
+    left: 14px;
+    font-size: 14px;
   }
   
   .button {
     padding: 16px;
     font-size: 16px;
+  }
+  
+  .label {
+    font-size: 14px;
+  }
+  
+  .icon-label {
+    font-size: 14px;
   }
 }
 
