@@ -109,10 +109,10 @@ export default function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 className="input"
-                placeholder="Ingresa tu email"
+                placeholder="Ingresa tu email" 
                 required
                 disabled={loading}
-              />
+              /> 
             </div>
           </div>
 
