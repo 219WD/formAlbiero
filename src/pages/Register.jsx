@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import './css/Register.css';
 import { createSwal } from '../utils/swalConfig';
+import config from '../config/config';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -58,7 +59,7 @@ export default function Register() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${config.API_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

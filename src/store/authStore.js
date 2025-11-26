@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import config from '../config/config';
 
 export const useAuthStore = create(
   persist(
@@ -42,7 +43,7 @@ export const useAuthStore = create(
         }
 
         try {
-          const response = await fetch('http://localhost:5000/api/auth/me', {
+          const response = await fetch(`${config.API_URL}/auth/me`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -78,7 +79,7 @@ export const useAuthStore = create(
       }
     }),
     {
-      name: 'auth-storage', // nombre para el localStorage
+      name: 'auth-storage',
       partialize: (state) => ({ 
         isAuthenticated: state.isAuthenticated,
         user: state.user 

@@ -4,6 +4,7 @@ import "./css/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { createSwal } from "../utils/swalConfig";
+import config from "../config/config";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -38,7 +39,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch(`${config.API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -109,10 +110,10 @@ export default function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 className="input"
-                placeholder="Ingresa tu email" 
+                placeholder="Ingresa tu email"
                 required
                 disabled={loading}
-              /> 
+              />
             </div>
           </div>
 
