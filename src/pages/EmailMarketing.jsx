@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
-import './EmailMarketing.css';
+import './css/EmailMarketing.css';
 
 // Importar CSS de Font Awesome
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -16,6 +16,21 @@ export default function EmailMarketing() {
 
   // URL del webhook para email marketing
   const WEBHOOK_URL = 'https://n8n.srv1092751.hstgr.cloud/webhook/email-marketing';
+
+  // Configuración de SweetAlert2 con la fuente Bai Jamjuree
+  const swalConfig = {
+    customClass: {
+      popup: 'custom-swal-popup',
+      title: 'custom-swal-title',
+      htmlContainer: 'custom-swal-text',
+      confirmButton: 'custom-swal-button',
+      cancelButton: 'custom-swal-button',
+      actions: 'custom-swal-actions'
+    },
+    buttonsStyling: false,
+    background: '#FAFFFF',
+    color: '#3D3D3D'
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -88,63 +103,46 @@ export default function EmailMarketing() {
   // Función para mostrar alerta de éxito
   const showSuccessAlert = () => {
     return Swal.fire({
+      ...swalConfig,
       title: '¡Emails Enviados!',
       html: 'Los emails se han enviado correctamente a todos los contactos de la base de datos.',
       icon: 'success',
       iconColor: '#7D1522',
       confirmButtonText: 'Aceptar',
-      confirmButtonColor: '#7D1522',
-      background: '#FAFFFF',
-      color: '#3D3D3D',
-      customClass: {
-        title: 'swal-title',
-        htmlContainer: 'swal-text',
-        confirmButton: 'swal-button'
-      }
+      confirmButtonColor: '#7D1522'
     });
   };
 
   // Función para mostrar alerta de error
   const showErrorAlert = (message) => {
     return Swal.fire({
+      ...swalConfig,
       title: '¡Error!',
       html: message,
       icon: 'error',
       iconColor: '#dc2626',
       confirmButtonText: 'Intentar nuevamente',
-      confirmButtonColor: '#dc2626',
-      background: '#FAFFFF',
-      color: '#3D3D3D',
-      customClass: {
-        title: 'swal-title',
-        htmlContainer: 'swal-text',
-        confirmButton: 'swal-button'
-      }
+      confirmButtonColor: '#dc2626'
     });
   };
 
   // Función para mostrar alerta de validación
   const showValidationAlert = (message) => {
     return Swal.fire({
+      ...swalConfig,
       title: 'Campos incompletos',
       html: message,
       icon: 'warning',
       iconColor: '#f59e0b',
       confirmButtonText: 'Entendido',
-      confirmButtonColor: '#f59e0b',
-      background: '#FAFFFF',
-      color: '#3D3D3D',
-      customClass: {
-        title: 'swal-title',
-        htmlContainer: 'swal-text',
-        confirmButton: 'swal-button'
-      }
+      confirmButtonColor: '#f59e0b'
     });
   };
 
   // Función para mostrar alerta de carga
   const showLoadingAlert = () => {
     Swal.fire({
+      ...swalConfig,
       title: 'Enviando emails...',
       html: 'Estamos enviando los emails a todos los contactos. Esto puede tomar unos minutos.',
       didOpen: () => {
@@ -153,13 +151,7 @@ export default function EmailMarketing() {
       allowOutsideClick: false,
       allowEscapeKey: false,
       allowEnterKey: false,
-      showConfirmButton: false,
-      background: '#FAFFFF',
-      color: '#3D3D3D',
-      customClass: {
-        title: 'swal-title',
-        htmlContainer: 'swal-text'
-      }
+      showConfirmButton: false
     });
   };
 

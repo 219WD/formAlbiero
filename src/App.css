@@ -5,3 +5,67 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+/* SweetAlert2 Custom Styles */
+.custom-swal-popup {
+  font-family: "Bai Jamjuree", sans-serif !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+.custom-swal-title {
+  font-family: "Bai Jamjuree", sans-serif !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  color: #3D3D3D !important;
+  margin-bottom: 15px !important;
+}
+
+.custom-swal-text {
+  font-family: "Bai Jamjuree", sans-serif !important;
+  font-size: 16px !important;
+  color: #3D3D3D !important;
+  line-height: 1.5 !important;
+}
+
+.custom-swal-button {
+  font-family: "Bai Jamjuree", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 12px 24px !important;
+  border-radius: 25px !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-transform: none !important;
+  margin: 0 8px !important;
+}
+
+.custom-swal-button.swal2-confirm {
+  background: linear-gradient(135deg, #7D1522 0%, #9c1d2e 100%) !important;
+  color: #FAFFFF !important;
+}
+
+.custom-swal-button.swal2-confirm:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(125, 21, 34, 0.3) !important;
+}
+
+.custom-swal-button.swal2-cancel {
+  background: #f1f3f4 !important;
+  color: #3D3D3D !important;
+}
+
+.custom-swal-button.swal2-cancel:hover {
+  background: #e0e0e0 !important;
+  transform: translateY(-2px) !important;
+}
+
+.custom-swal-actions {
+  gap: 10px !important;
+}
+
+/* Loading spinner personalizado */
+.swal2-loader {
+  border-color: #7D1522 transparent #7D1522 transparent !important;
+}

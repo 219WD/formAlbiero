@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
-import './RegistroForm.css';
+import './css/RegistroForm.css';
 
 // Importar CSS de Font Awesome
 import '@fortawesome/fontawesome-free/css/all.min.css';

@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+/* Navbar de admin - ESTILOS MEJORADOS */
+.admin-navbar {
+  background: linear-gradient(135deg, #7D1522 0%, #9c1d2e 100%);
+  padding: 12px 0;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.admin-navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.admin-navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-navbar-logo .logo {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
+.logo-text {
+  color: #FAFFFF;
+  font-family: "Bai Jamjuree", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Estilos para la información del usuario y botones */
+.navbar-user-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-greeting {
+  color: #FAFFFF;
+  font-family: "Bai Jamjuree", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.navbar-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.nav-action-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FAFFFF;
+  padding: 10px 18px;
+  border-radius: 25px;
+  font-family: "Bai Jamjuree", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.nav-action-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-action-button.email-marketing {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.nav-action-button.email-marketing:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.nav-action-button.logout {
+  background: rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.4);
+}
+
+.nav-action-button.logout:hover {
+  background: rgba(220, 38, 38, 0.3);
+}
+
+/* Responsive para admin navbar */
+@media (max-width: 768px) {
+  .admin-navbar-container {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 20px;
+  }
+
+  .navbar-user-info {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .user-greeting {
+    text-align: center;
+    order: 2;
+  }
+
+  .navbar-actions {
+    order: 1;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .nav-action-button {
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+  }
+
+  .admin-navbar-logo {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .nav-action-button {
+    width: 100%;
+  }
+
+  .admin-navbar {
+    padding: 10px 0;
+  }
+}
