@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
+import Cloudinary from '../components/Cloudinary';
 import './css/EmailMarketing.css';
 
 // Importar CSS de Font Awesome
@@ -40,16 +41,37 @@ export default function EmailMarketing() {
     }));
   };
 
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files);
+  // Función para manejar la subida de archivos desde Cloudinary
+  const handleCloudinaryUpload = (fileUrl) => {
+    console.log('Archivo subido a Cloudinary:', fileUrl);
+    if (fileUrl) {
+      setFormData(prevState => ({
+        ...prevState,
+        archivos: [...prevState.archivos, { url: fileUrl, tipo: 'cloudinary' }]
+      }));
+    }
+  };
+
+  // Función para eliminar archivo de Cloudinary
+  const handleRemoveCloudinaryFile = (fileUrl) => {
+    console.log('Eliminando archivo de Cloudinary:', fileUrl);
     setFormData(prevState => ({
       ...prevState,
-      archivos: files
+      archivos: prevState.archivos.filter(archivo => archivo.url !== fileUrl)
     }));
+  };
+
+  // Función para verificar si una URL es una imagen
+  const esImagen = (url) => {
+    const extensionesImagen = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
+    return extensionesImagen.some(ext => url.toLowerCase().includes(ext));
   };
 
   // Función para generar preview del email
   const generarPreview = () => {
+    // Filtrar solo las imágenes
+    const imagenes = formData.archivos.filter(archivo => esImagen(archivo.url));
+    
     const previewHTML = `
       <!DOCTYPE html>
       <html lang="es">
@@ -70,6 +92,11 @@ export default function EmailMarketing() {
               .mensaje { background-color: #f8f9fa; border-radius: 10px; padding: 25px; margin-bottom: 25px; border-left: 4px solid #7D1522; }
               .mensaje h2 { color: #7D1522; font-size: 24px; font-weight: 600; margin-bottom: 20px; text-align: center; }
               .texto-mensaje { color: #3D3D3D; font-size: 16px; line-height: 1.6; white-space: pre-wrap; }
+              .imagenes-adjuntas { background-color: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 25px; border-left: 4px solid #3D3D3D; }
+              .imagenes-adjuntas h3 { color: #3D3D3D; font-size: 18px; font-weight: 600; margin-bottom: 15px; text-align: center; }
+              .galeria-imagenes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+              .imagen-item { text-align: center; }
+              .imagen-adjunta { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
               .footer { background-color: #f1f3f4; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0; }
               .footer p { font-size: 14px; color: #7a7a7a; margin-bottom: 10px; }
           </style>
@@ -87,6 +114,19 @@ export default function EmailMarketing() {
                       <h2>Mensaje Importante</h2>
                       <div class="texto-mensaje">${formData.mensaje || 'Tu mensaje aparecerá aquí...'}</div>
                   </div>
+                  
+                  ${imagenes.length > 0 ? `
+                  <div class="imagenes-adjuntas">
+                      <h3>🖼️ Imágenes Adjuntas</h3>
+                      <div class="galeria-imagenes">
+                          ${imagenes.map(archivo => `
+                              <div class="imagen-item">
+                                  <img src="${archivo.url}" alt="Imagen adjunta" class="imagen-adjunta">
+                              </div>
+                          `).join('')}
+                      </div>
+                  </div>
+                  ` : ''}
               </div>
               
               <div class="footer">
@@ -160,20 +200,6 @@ export default function EmailMarketing() {
     Swal.close();
   };
 
-  // Función para convertir archivo a base64 (solo el contenido, sin el prefix)
-  const convertirABase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        // Remover el prefix "data:image/...;base64," y quedarse solo con el contenido base64
-        const base64 = reader.result.split(',')[1];
-        resolve(base64);
-      };
-      reader.onerror = error => reject(error);
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -188,6 +214,9 @@ export default function EmailMarketing() {
     
     try {
       console.log('📤 Enviando campaña de email:', formData);
+
+      // Filtrar solo las imágenes para el HTML
+      const imagenes = formData.archivos.filter(archivo => esImagen(archivo.url));
 
       // Generar el HTML COMPLETO igual que tu preview
       const htmlCompleto = `
@@ -210,6 +239,11 @@ export default function EmailMarketing() {
                 .mensaje { background-color: #f8f9fa; border-radius: 10px; padding: 25px; margin-bottom: 25px; border-left: 4px solid #7D1522; }
                 .mensaje h2 { color: #7D1522; font-size: 24px; font-weight: 600; margin-bottom: 20px; text-align: center; }
                 .texto-mensaje { color: #3D3D3D; font-size: 16px; line-height: 1.6; white-space: pre-wrap; }
+                .imagenes-adjuntas { background-color: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 25px; border-left: 4px solid #3D3D3D; }
+                .imagenes-adjuntas h3 { color: #3D3D3D; font-size: 18px; font-weight: 600; margin-bottom: 15px; text-align: center; }
+                .galeria-imagenes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+                .imagen-item { text-align: center; }
+                .imagen-adjunta { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
                 .footer { background-color: #f1f3f4; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0; }
                 .footer p { font-size: 14px; color: #7a7a7a; margin-bottom: 10px; }
             </style>
@@ -227,6 +261,19 @@ export default function EmailMarketing() {
                         <h2>Mensaje Importante</h2>
                         <div class="texto-mensaje">${formData.mensaje}</div>
                     </div>
+                    
+                    ${imagenes.length > 0 ? `
+                    <div class="imagenes-adjuntas">
+                        <h3>🖼️ Imágenes Adjuntas</h3>
+                        <div class="galeria-imagenes">
+                            ${imagenes.map(archivo => `
+                                <div class="imagen-item">
+                                    <img src="${archivo.url}" alt="Imagen adjunta" class="imagen-adjunta">
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    ` : ''}
                 </div>
                 
                 <div class="footer">
@@ -238,24 +285,22 @@ export default function EmailMarketing() {
         </html>
       `;
 
-      // Convertir archivos a base64 si existen
-      const archivosBase64 = [];
-      if (formData.archivos.length > 0) {
-        for (const archivo of formData.archivos) {
-          const base64 = await convertirABase64(archivo);
-          archivosBase64.push({
-            nombre: archivo.name,
-            tipo: archivo.type,
-            contenido: base64 // Solo el contenido base64 sin el prefix
-          });
-        }
-      }
+      // Preparar archivos para el payload - ahora solo URLs de Cloudinary
+      const cloudinaryAttachments = formData.archivos
+        .filter(archivo => archivo.tipo === 'cloudinary')
+        .map(archivo => ({
+          url: archivo.url,
+          nombre: archivo.url.split('/').pop(),
+          tipo: 'cloudinary',
+          esImagen: esImagen(archivo.url)
+        }));
 
       const payload = {
         asunto: formData.asunto,
         mensaje: formData.mensaje,
-        htmlCompleto: htmlCompleto, // HTML completo para el email
-        archivos: archivosBase64,
+        htmlCompleto: htmlCompleto,
+        archivos: [], // Ya no enviamos archivos en base64
+        cloudinaryAttachments: cloudinaryAttachments, // Enviamos las URLs de Cloudinary
         timestamp: new Date().toISOString(),
         tipo: 'email-marketing'
       };
@@ -359,21 +404,15 @@ export default function EmailMarketing() {
           </div>
         </div>
 
+        {/* Sección de Cloudinary */}
         <div className="form-group">
-          <label htmlFor="archivos" className="label">
-            <i className="fas fa-paperclip icon-label"></i>
-            Adjuntar Archivos
-          </label>
-          <div className="input-container">
-            <i className="fas fa-file-upload input-icon"></i>
-            <input 
-              id="archivos"
-              type="file" 
-              name="archivos" 
-              onChange={handleFileChange} 
-              className="file-input" 
-              multiple
+          <div className="cloudinary-container">
+            <Cloudinary 
+              onUploadComplete={handleCloudinaryUpload}
+              onRemoveImage={handleRemoveCloudinaryFile}
               disabled={loading}
+              buttonText="Subir Archivo"
+              showPreview={true}
             />
           </div>
           {formData.archivos.length > 0 && (
@@ -382,10 +421,9 @@ export default function EmailMarketing() {
               <ul>
                 {formData.archivos.map((archivo, index) => (
                   <li key={index}>
-                    <i className="fas fa-file"></i> {archivo.name} 
-                    <span className="tamano-archivo">
-                      ({(archivo.size / 1024 / 1024).toFixed(2)} MB)
-                    </span>
+                    <i className={`fas ${esImagen(archivo.url) ? 'fa-image' : 'fa-file'}`}></i> 
+                    {archivo.url.split('/').pop()}
+                    {esImagen(archivo.url) && <span className="badge-imagen"> (Imagen)</span>}
                   </li>
                 ))}
               </ul>

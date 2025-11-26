@@ -311,3 +311,113 @@
 .swal2-loader {
   border-color: #7D1522 transparent #7D1522 transparent !important;
 }
+
+/* Estilos para la sección de Cloudinary */
+.cloudinary-section {
+  margin-top: 10px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #fafafa;
+}
+
+.cloudinary-section:hover {
+  border-color: #7D1522;
+  background-color: #f8f9fa;
+}
+
+.cloudinary-lista {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #7D1522;
+}
+
+.cloudinary-lista p {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #3D3D3D;
+}
+
+.cloudinary-lista ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cloudinary-lista li {
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cloudinary-lista li i {
+  color: #7D1522;
+}
+
+.cloudinary-url {
+  font-size: 0.8em;
+  color: #666;
+  margin-left: auto;
+}
+
+/* Mejoras para la lista de archivos locales */
+.archivos-lista {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #3D3D3D;
+}
+
+.archivos-lista p {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #3D3D3D;
+}
+
+.archivos-lista ul {
+  list-style: none;
+  padding: 0;
+}
+
+.archivos-lista li {
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tamano-archivo {
+  font-size: 0.8em;
+  color: #666;
+  margin-left: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cloudinary-section {
+    padding: 10px;
+  }
+  
+  .cloudinary-lista li,
+  .archivos-lista li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .cloudinary-url,
+  .tamano-archivo {
+    margin-left: 0;
+  }
+}
