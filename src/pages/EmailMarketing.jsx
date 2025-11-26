@@ -160,6 +160,20 @@ export default function EmailMarketing() {
     Swal.close();
   };
 
+  // Función para convertir archivo a base64 (solo el contenido, sin el prefix)
+  const convertirABase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        // Remover el prefix "data:image/...;base64," y quedarse solo con el contenido base64
+        const base64 = reader.result.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = error => reject(error);
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -175,6 +189,55 @@ export default function EmailMarketing() {
     try {
       console.log('📤 Enviando campaña de email:', formData);
 
+      // Generar el HTML COMPLETO igual que tu preview
+      const htmlCompleto = `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${formData.asunto}</title>
+            <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body { font-family: "Bai Jamjuree", sans-serif; background-color: #FAFFFF; color: #3D3D3D; line-height: 1.6; }
+                .email-container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+                .banner { background: linear-gradient(135deg, #7D1522 0%, #9c1d2e 100%); padding: 30px 20px; text-align: center; }
+                .logo { width: 120px; height: auto; margin-bottom: 15px; }
+                .banner h1 { color: #FAFFFF; font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+                .banner p { color: #FAFFFF; font-size: 18px; font-weight: 400; opacity: 0.9; }
+                .content { padding: 30px; }
+                .mensaje { background-color: #f8f9fa; border-radius: 10px; padding: 25px; margin-bottom: 25px; border-left: 4px solid #7D1522; }
+                .mensaje h2 { color: #7D1522; font-size: 24px; font-weight: 600; margin-bottom: 20px; text-align: center; }
+                .texto-mensaje { color: #3D3D3D; font-size: 16px; line-height: 1.6; white-space: pre-wrap; }
+                .footer { background-color: #f1f3f4; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0; }
+                .footer p { font-size: 14px; color: #7a7a7a; margin-bottom: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class="email-container">
+                <div class="banner">
+                    <img src="https://res.cloudinary.com/dtxdv136u/image/upload/v1763499836/logo_alb_ged07k.png" alt="Logo Albiero" class="logo">
+                    <h1>${formData.asunto}</h1>
+                    <p>Albiero - Soluciones profesionales</p>
+                </div>
+                
+                <div class="content">
+                    <div class="mensaje">
+                        <h2>Mensaje Importante</h2>
+                        <div class="texto-mensaje">${formData.mensaje}</div>
+                    </div>
+                </div>
+                
+                <div class="footer">
+                    <p>Este es un mensaje enviado por Albiero</p>
+                    <p>© ${new Date().getFullYear()} Albiero. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+      `;
+
       // Convertir archivos a base64 si existen
       const archivosBase64 = [];
       if (formData.archivos.length > 0) {
@@ -183,23 +246,28 @@ export default function EmailMarketing() {
           archivosBase64.push({
             nombre: archivo.name,
             tipo: archivo.type,
-            contenido: base64
+            contenido: base64 // Solo el contenido base64 sin el prefix
           });
         }
       }
+
+      const payload = {
+        asunto: formData.asunto,
+        mensaje: formData.mensaje,
+        htmlCompleto: htmlCompleto, // HTML completo para el email
+        archivos: archivosBase64,
+        timestamp: new Date().toISOString(),
+        tipo: 'email-marketing'
+      };
+
+      console.log('📤 Payload enviado a n8n:', payload);
 
       const response = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          asunto: formData.asunto,
-          mensaje: formData.mensaje,
-          archivos: archivosBase64,
-          timestamp: new Date().toISOString(),
-          tipo: 'email-marketing'
-        })
+        body: JSON.stringify(payload)
       });
 
       console.log('📥 Respuesta recibida:', {
@@ -222,7 +290,7 @@ export default function EmailMarketing() {
         setPreview('');
       } else {
         const errorText = await response.text();
-        console.error('❌ Error:', errorText);
+        console.error('❌ Error del servidor:', errorText);
         await showErrorAlert("Error al enviar los emails. Por favor intenta nuevamente.");
       }
     } catch (error) {
@@ -232,16 +300,6 @@ export default function EmailMarketing() {
     } finally {
       setLoading(false);
     }
-  };
-
-  // Función para convertir archivo a base64
-  const convertirABase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
-    });
   };
 
   return (
